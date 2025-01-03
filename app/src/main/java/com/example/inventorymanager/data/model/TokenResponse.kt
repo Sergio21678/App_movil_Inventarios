@@ -2,5 +2,5 @@ package com.example.inventorymanager.data.model
 
 data class TokenResponse(
     val access: String,
-    val refresh: String?
+    val refresh: String
 )

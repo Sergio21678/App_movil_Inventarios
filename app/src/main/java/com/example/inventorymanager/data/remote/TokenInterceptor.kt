@@ -3,6 +3,7 @@ package com.example.inventorymanager.data.remote
 import okhttp3.Interceptor
 import okhttp3.Response
 import android.content.SharedPreferences
+import android.util.Log
 import kotlinx.coroutines.runBlocking
 
 class TokenInterceptor(
@@ -13,34 +14,32 @@ class TokenInterceptor(
     override fun intercept(chain: Interceptor.Chain): Response {
         val requestBuilder = chain.request().newBuilder()
 
-        // Obtener el token de acceso actual
         val token = sharedPreferences.getString("access_token", null)
-        token?.let {
+        token?.trim()?.let {
             requestBuilder.addHeader("Authorization", "Bearer $it")
         }
 
-        // Realizar la solicitud inicial
         val response = chain.proceed(requestBuilder.build())
 
-        // Si el token expira (error 401), intentar refrescarlo
         if (response.code == 401) {
             synchronized(this) {
-                val newToken = runBlocking { refreshToken() } // Suspender para obtener un nuevo token
+                val newToken = runBlocking { refreshToken() }
                 if (!newToken.isNullOrEmpty()) {
-                    // Guardar el nuevo token en SharedPreferences
                     sharedPreferences.edit().putString("access_token", newToken).apply()
 
-                    // Crear una nueva solicitud con el token actualizado
                     val newRequest = chain.request().newBuilder()
                         .removeHeader("Authorization")
                         .addHeader("Authorization", "Bearer $newToken")
                         .build()
 
-                    // Reintentar la solicitud con el nuevo token
                     return chain.proceed(newRequest)
+                } else {
+                    Log.e("TokenInterceptor", "No se pudo refrescar el token")
+                    // Opcional: Manejar la expiración del refresh token aquí.
                 }
             }
         }
+
 
         return response
     }
@@ -52,10 +51,14 @@ class TokenInterceptor(
             if (response.isSuccessful) {
                 response.body()?.access
             } else {
+                Log.e("TokenInterceptor", "Error al refrescar el token: ${response.code()} ${response.message()}")
                 null
             }
         } catch (e: Exception) {
+            Log.e("TokenInterceptor", "Excepción al refrescar el token", e)
             null
         }
     }
+
 }
+

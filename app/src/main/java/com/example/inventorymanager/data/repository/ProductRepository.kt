@@ -8,17 +8,9 @@ import retrofit2.Response
 class ProductRepository(private val apiService: ApiService) {
 
     // Obtener todos los productos
-    class ProductRepository(private val apiService: ApiService) {
-        suspend fun getProducts(): List<Product>? {
-            val response = apiService.getProducts()
-            return if (response.isSuccessful) {
-                response.body()
-            } else {
-                null // Maneja errores aquí si es necesario
-            }
-        }
+    suspend fun getProducts(): Response<List<Product>> {
+        return apiService.getProducts() // Asegúrate de que este método esté definido en tu ApiService
     }
-
 
     // Agregar un producto
     suspend fun addProduct(product: Product): Response<Product> {
@@ -31,11 +23,5 @@ class ProductRepository(private val apiService: ApiService) {
     }
 
     // Login
-    suspend fun login(credentials: Map<String, String>): Response<TokenResponse> {
-        return apiService.login(credentials)
-    }
-
-    suspend fun getProducts(): Response<List<Product>> {
-        return apiService.getProducts() // Asegúrate de que este método esté definido en tu ApiService
-    }
+    suspend fun login(credentials: Map<String, String>) = apiService.login(credentials)
 }

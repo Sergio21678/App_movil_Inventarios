@@ -7,7 +7,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object ApiClient {
-    private const val BASE_URL = "http://127.0.0.1:8000/api/"
+    private const val BASE_URL = "http://192.168.0.249:8000/api/"
 
     fun getRetrofit(context: Context): Retrofit {
         val sharedPreferences = context.getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
@@ -36,5 +36,6 @@ object ApiClient {
         return getRetrofit(context).create(ApiService::class.java)
     }
 }
+
 
 

@@ -16,14 +16,14 @@ interface ApiService {
     @POST("token/refresh/")
     suspend fun refreshToken(@Body body: Map<String, String>): Response<TokenResponse>
 
-    @GET("api/productos/")
+    @GET("productos/")
     suspend fun getProducts(): Response<List<Product>>
 
     @POST("products")
     suspend fun addProduct(@Body product: Product): Response<Product>
 
     @POST("token/")
-    suspend fun login(@Body body: Map<String, String>): Response<TokenResponse>
+    suspend fun login(@Body credentials: Map<String, String>): Response<TokenResponse>
 
     @DELETE("products/{id}/delete")
     suspend fun deleteProduct(@Path("id") productId: Int): Response<Unit>
