@@ -9,9 +9,18 @@ import retrofit2.http.Body
 import retrofit2.http.Path
 import retrofit2.Response
 import retrofit2.http.DELETE
+import retrofit2.http.Query
 
 
 interface ApiService {
+
+    @GET("productos/busqueda/")
+    suspend fun searchProducts(
+        @Query("nombre") nombre: String? = null,
+        @Query("categoria") categoria: String? = null,
+        @Query("precio_min") precioMin: Double? = null,
+        @Query("precio_max") precioMax: Double? = null
+    ): Response<List<Product>>
 
     @POST("token/refresh/")
     suspend fun refreshToken(@Body body: Map<String, String>): Response<TokenResponse>
@@ -27,6 +36,5 @@ interface ApiService {
 
     @DELETE("products/{id}/delete")
     suspend fun deleteProduct(@Path("id") productId: Int): Response<Unit>
-
 
 }

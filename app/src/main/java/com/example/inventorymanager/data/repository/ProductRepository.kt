@@ -22,6 +22,16 @@ class ProductRepository(private val apiService: ApiService) {
         return apiService.deleteProduct(productId)
     }
 
+    // Metodo de Busqueda
+    suspend fun searchProducts(
+        nombre: String? = null,
+        categoria: String? = null,
+        precioMin: Double? = null,
+        precioMax: Double? = null
+    ): Response<List<Product>> {
+        return apiService.searchProducts(nombre, categoria, precioMin, precioMax)
+    }
+
     // Login
     suspend fun login(credentials: Map<String, String>) = apiService.login(credentials)
 }

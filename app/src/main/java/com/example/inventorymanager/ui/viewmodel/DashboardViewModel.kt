@@ -16,8 +16,11 @@ import kotlinx.coroutines.withContext
 
 class DashboardViewModel(private val repository: ProductRepository) : ViewModel() {
 
-    private val _products = MutableLiveData<List<Product>>()
-    val products: LiveData<List<Product>> get() = _products
+    private val _products = MutableLiveData<List<Product>?>()
+    val products: LiveData<List<Product>?> get() = _products
+
+    private val _searchResults = MutableLiveData<List<Product>>()
+    val searchResults: LiveData<List<Product>> get() = _searchResults
 
     fun fetchProducts() {
         viewModelScope.launch {
@@ -42,6 +45,7 @@ class DashboardViewModel(private val repository: ProductRepository) : ViewModel(
     }
 
 
+
     fun login(username: String, password: String, onSuccess: (String, String) -> Unit, onFailure: (Throwable) -> Unit) {
         viewModelScope.launch {
             try {
@@ -60,6 +64,29 @@ class DashboardViewModel(private val repository: ProductRepository) : ViewModel(
                 }
             } catch (e: Exception) {
                 onFailure(e)
+            }
+        }
+    }
+
+    fun searchProducts(
+        nombre: String? = null,
+        categoria: String? = null,
+        precioMin: Double? = null,
+        precioMax: Double? = null
+    ) {
+        viewModelScope.launch {
+            try {
+                val response = repository.searchProducts(nombre, categoria, precioMin, precioMax)
+                if (response.isSuccessful) {
+                    val products = response.body()
+                    _products.postValue(products ?: emptyList())
+                } else {
+                    _products.postValue(emptyList())
+                    println("Error en la búsqueda avanzada: ${response.code()}")
+                }
+            } catch (e: Exception) {
+                _products.postValue(emptyList())
+                println("Excepción en la búsqueda avanzada: ${e.message}")
             }
         }
     }
