@@ -26,7 +26,7 @@ fun WelcomeScreen(navController: NavController) {
         verticalArrangement = Arrangement.Center
     ) {
         Image(
-            painter = painterResource(id = R.drawable.ic_inventory), //Aqui va un icono
+            painter = painterResource(id = R.drawable.inventory),
             contentDescription = "Inventory Logo",
             modifier = Modifier.size(128.dp)
         )
