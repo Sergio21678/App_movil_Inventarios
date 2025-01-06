@@ -8,7 +8,9 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.rememberNavController
 import com.example.inventorymanager.ui.navigation.Screen
 
 @Composable
@@ -29,4 +31,10 @@ fun WelcomeScreen(navController: NavController) {
             Text(text = "Ir al Dashboard")
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun WelcomeScreenPreview() {
+    WelcomeScreen(navController = rememberNavController())
 }

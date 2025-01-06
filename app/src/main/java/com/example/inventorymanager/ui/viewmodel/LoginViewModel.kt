@@ -19,7 +19,7 @@ class LoginViewModel(private val repository: ProductRepository) : ViewModel() {
     ) {
         viewModelScope.launch {
             try {
-                // Llama al método login desde la instancia de repository
+                // Llama al metodo login desde la instancia de repository
                 val response = repository.login(mapOf("email" to email, "password" to password))
                 if (response.isSuccessful) {
                     val body = response.body()
