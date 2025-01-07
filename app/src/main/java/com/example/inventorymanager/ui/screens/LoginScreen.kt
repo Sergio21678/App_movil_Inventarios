@@ -14,6 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.inventorymanager.data.remote.ApiService
+import com.example.inventorymanager.data.remote.RetrofitClient
 import com.example.inventorymanager.data.repository.ProductRepository
 import com.example.inventorymanager.ui.theme.InventoryManagerTheme
 import com.example.inventorymanager.ui.viewmodel.LoginViewModel

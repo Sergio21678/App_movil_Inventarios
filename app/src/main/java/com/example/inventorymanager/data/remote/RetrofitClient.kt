@@ -1,9 +1,9 @@
+package com.example.inventorymanager.data.remote
+
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import android.content.Context
-import com.example.inventorymanager.data.remote.ApiService
-import com.example.inventorymanager.data.remote.TokenInterceptor
 
 object RetrofitClient {
 

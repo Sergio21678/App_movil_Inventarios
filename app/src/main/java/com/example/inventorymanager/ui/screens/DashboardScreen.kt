@@ -1,28 +1,26 @@
 package com.example.inventorymanager.ui.screens
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.ui.unit.dp
-import com.example.inventorymanager.ui.viewmodel.DashboardViewModel
-import androidx.compose.ui.Modifier
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.example.inventorymanager.ui.theme.InventoryManagerTheme
+import com.example.inventorymanager.ui.viewmodel.DashboardViewModel
 
 @Composable
-fun DashboardScreen(navController: NavController, viewModel: DashboardViewModel) {
+fun DashboardScreen(navController: NavController, viewModel: DashboardViewModel = viewModel()) {
     val products by viewModel.products.observeAsState(emptyList())
 
     LaunchedEffect(Unit) {
@@ -64,7 +62,11 @@ fun DashboardScreen(navController: NavController, viewModel: DashboardViewModel)
                                 // Navega a la pantalla de detalles del producto
                                 navController.navigate("product_detail/${product.id}")
                             },
-                        elevation = CardDefaults.cardElevation(4.dp)
+                        elevation = CardDefaults.cardElevation(4.dp),
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.surface,
+                            contentColor = MaterialTheme.colorScheme.onSurface
+                        )
                     ) {
                         Column(modifier = Modifier.padding(16.dp)) {
                             Text(
@@ -86,7 +88,16 @@ fun DashboardScreen(navController: NavController, viewModel: DashboardViewModel)
                 }
             }
         }
-
     }
 }
 
+@Preview(showBackground = true)
+@Composable
+fun DashboardScreenPreview() {
+    InventoryManagerTheme {
+        DashboardScreen(
+            navController = rememberNavController(),
+            viewModel = DashboardViewModel()
+        )
+    }
+}
