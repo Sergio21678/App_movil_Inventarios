@@ -7,7 +7,7 @@ data class Product(
     val codigo: String,
     val stock: Int,
     val precio: Double,
-    val categoria: Int?,
+    val categoria: String,
     val categoria_nombre: String?,
     val fecha_creacion: String
 )
