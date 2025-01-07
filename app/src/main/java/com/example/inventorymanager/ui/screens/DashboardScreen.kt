@@ -44,7 +44,7 @@ fun DashboardScreen(navController: NavController, viewModel: DashboardViewModel)
         )
 
         LazyColumn {
-            products.groupBy { it.categoria_nombre }.forEach { (categoriaNombre, productos) ->
+            products?.groupBy { it.categoria_nombre }?.forEach { (categoriaNombre, productos) ->
                 item {
                     Text(
                         text = categoriaNombre ?: "Sin Categoría",

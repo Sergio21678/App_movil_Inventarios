@@ -10,15 +10,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.inventorymanager.data.remote.ApiService
 import com.example.inventorymanager.data.repository.ProductRepository
+import com.example.inventorymanager.ui.theme.InventoryManagerTheme
 import com.example.inventorymanager.ui.viewmodel.LoginViewModel
 
-
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen(onLoginSuccess: () -> Unit) {
+fun LoginScreen(onLoginSuccess: () -> Unit = {}) {
     val context = LocalContext.current
 
     // Inicialización de Retrofit y los repositorios
@@ -49,7 +51,11 @@ fun LoginScreen(onLoginSuccess: () -> Unit) {
             value = username,
             onValueChange = { username = it },
             label = { Text("Email") },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.onSurface
+            )
         )
         Spacer(modifier = Modifier.height(8.dp))
 
@@ -60,7 +66,11 @@ fun LoginScreen(onLoginSuccess: () -> Unit) {
             label = { Text("Contraseña") },
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.onSurface
+            )
         )
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -68,7 +78,7 @@ fun LoginScreen(onLoginSuccess: () -> Unit) {
         Button(
             onClick = {
                 loginViewModel.login(
-                    email = username, // Cambié email por username
+                    email = username,
                     password = password,
                     onSuccess = { _, _ ->
                         Toast.makeText(context, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show()
@@ -83,5 +93,13 @@ fun LoginScreen(onLoginSuccess: () -> Unit) {
         ) {
             Text("Iniciar Sesión")
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun LoginScreenPreview() {
+    InventoryManagerTheme {
+        LoginScreen()
     }
 }

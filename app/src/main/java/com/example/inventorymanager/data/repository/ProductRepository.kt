@@ -2,7 +2,6 @@ package com.example.inventorymanager.data.repository
 
 import com.example.inventorymanager.data.model.Product
 import com.example.inventorymanager.data.remote.ApiService
-import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
 
 class ProductRepository(private val apiService: ApiService) {
@@ -34,8 +33,4 @@ class ProductRepository(private val apiService: ApiService) {
 
     // Login
     suspend fun login(credentials: Map<String, String>) = apiService.login(credentials)
-}
-
-interface Repository {
-    fun getProducts(): Flow<List<Product>>
 }
