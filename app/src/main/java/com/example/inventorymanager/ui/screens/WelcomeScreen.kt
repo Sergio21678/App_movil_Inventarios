@@ -18,33 +18,37 @@ import com.example.inventorymanager.ui.theme.InventoryManagerTheme
 
 @Composable
 fun WelcomeScreen(navController: NavController) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Image(
-            painter = painterResource(id = R.drawable.inventory), //Aqui va un icono
-            contentDescription = "Inventory Logo",
-            modifier = Modifier.size(128.dp)
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            text = "Bienvenido a Inventory Manager",
-            style = MaterialTheme.typography.titleLarge.copy(
-                color = MaterialTheme.colorScheme.primary,
-                fontSize = 24.sp
-            )
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        Button(
-            onClick = { navController.navigate(Screen.Dashboard.route) },
-            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary),
-            modifier = Modifier.fillMaxWidth()
+    Box(modifier = Modifier.fillMaxSize()) {
+        BackgroundShapes()
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
-            Text(text = "Ir al Dashboard", color = MaterialTheme.colorScheme.onSecondary)
+            Image(
+                painter = painterResource(id = R.drawable.inventory), //Aqui va un icono
+                contentDescription = "Inventory Logo",
+                modifier = Modifier.size(128.dp)
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = "Bienvenido a Inventory Manager",
+                style = MaterialTheme.typography.titleLarge.copy(
+                    color = MaterialTheme.colorScheme.primary,
+                    fontSize = 24.sp
+                )
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Button(
+                onClick = { navController.navigate(Screen.Dashboard.route) },
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(text = "Ir al Dashboard", color = MaterialTheme.colorScheme.onSecondary)
+            }
         }
     }
 }
