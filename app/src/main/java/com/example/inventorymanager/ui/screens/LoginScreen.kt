@@ -130,34 +130,34 @@ fun LoginScreen(onLoginSuccess: () -> Unit = {}) {
 
 @Composable
 fun BackgroundShapes(modifier: Modifier = Modifier) {
-    val primaryColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
-    val secondaryColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.2f)
+    val primaryColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f)
+    val secondaryColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.3f)
 
     Canvas(modifier = modifier.fillMaxSize()) {
-        // Dibuja un círculo grande
-        drawCircle(
-            color = primaryColor,
-            radius = 300f,
-            center = Offset(x = size.width * 0.2f, y = size.height * 0.3f)
-        )
-
-        // Dibuja un cuadrado grande
+        // Dibuja un cuadrado muy grande en la parte inferior
         drawRect(
             color = secondaryColor,
-            topLeft = Offset(x = size.width * 0.4f, y = size.height * 0.5f),
-            size = androidx.compose.ui.geometry.Size(300f, 300f)
+            topLeft = Offset(x = size.width * 0.2f, y = size.height * 0.7f),
+            size = androidx.compose.ui.geometry.Size(600f, 600f)
         )
 
-        // Dibuja un triángulo grande
+        // Dibuja un triángulo muy grande en el centro a la izquierda
         val path = androidx.compose.ui.graphics.Path().apply {
-            moveTo(size.width * 0.8f, size.height * 0.2f)
-            lineTo(size.width * 0.9f, size.height * 0.5f)
-            lineTo(size.width * 0.6f, size.height * 0.5f)
+            moveTo(size.width * 0.1f, size.height * 0.4f)
+            lineTo(size.width * 0.4f, size.height * 0.9f)
+            lineTo(size.width * 0.1f, size.height * 0.9f)
             close()
         }
         drawPath(
             path = path,
             color = primaryColor
+        )
+
+        // Dibuja un círculo muy grande
+        drawCircle(
+            color = primaryColor,
+            radius = 600f,
+            center = Offset(x = size.width * 0.1f, y = size.height * 0.3f)
         )
     }
 }
