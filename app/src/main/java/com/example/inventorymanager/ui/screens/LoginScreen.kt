@@ -2,6 +2,7 @@ package com.example.inventorymanager.ui.screens
 
 import android.widget.Toast
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
@@ -47,6 +48,14 @@ fun LoginScreen(onLoginSuccess: () -> Unit = {}) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
+            // Icono en el centro
+            Image(
+                painter = painterResource(R.drawable.image_login), // Reemplaza con tu icono
+                contentDescription = "Center Icon",
+                modifier = Modifier.size(128.dp)
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+
             // Título
             Text(
                 text = "Iniciar Sesión",
@@ -125,15 +134,30 @@ fun BackgroundShapes(modifier: Modifier = Modifier) {
     val secondaryColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.2f)
 
     Canvas(modifier = modifier.fillMaxSize()) {
+        // Dibuja un círculo grande
         drawCircle(
             color = primaryColor,
-            radius = 200f,
-            center = Offset(x = size.width * 0.3f, y = size.height * 0.3f)
+            radius = 300f,
+            center = Offset(x = size.width * 0.2f, y = size.height * 0.3f)
         )
-        drawCircle(
+
+        // Dibuja un cuadrado grande
+        drawRect(
             color = secondaryColor,
-            radius = 150f,
-            center = Offset(x = size.width * 0.7f, y = size.height * 0.7f)
+            topLeft = Offset(x = size.width * 0.4f, y = size.height * 0.5f),
+            size = androidx.compose.ui.geometry.Size(300f, 300f)
+        )
+
+        // Dibuja un triángulo grande
+        val path = androidx.compose.ui.graphics.Path().apply {
+            moveTo(size.width * 0.8f, size.height * 0.2f)
+            lineTo(size.width * 0.9f, size.height * 0.5f)
+            lineTo(size.width * 0.6f, size.height * 0.5f)
+            close()
+        }
+        drawPath(
+            path = path,
+            color = primaryColor
         )
     }
 }
