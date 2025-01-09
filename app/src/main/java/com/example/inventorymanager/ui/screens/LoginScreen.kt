@@ -10,11 +10,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.inventorymanager.R
 import com.example.inventorymanager.data.remote.ApiService
 import com.example.inventorymanager.data.remote.RetrofitClient
 import com.example.inventorymanager.data.repository.ProductRepository
@@ -57,6 +59,13 @@ fun LoginScreen(onLoginSuccess: () -> Unit = {}) {
                 value = username,
                 onValueChange = { username = it },
                 label = { Text("Email") },
+                leadingIcon = {
+                    Icon(
+                        painter = painterResource(R.drawable.mdi__email),
+                        contentDescription = "Email Icon",
+                        modifier = Modifier.size(20.dp)
+                    )
+                },
                 modifier = Modifier.fillMaxWidth(),
                 colors = TextFieldDefaults.outlinedTextFieldColors(
                     focusedBorderColor = MaterialTheme.colorScheme.primary,
@@ -70,6 +79,13 @@ fun LoginScreen(onLoginSuccess: () -> Unit = {}) {
                 value = password,
                 onValueChange = { password = it },
                 label = { Text("Contraseña") },
+                leadingIcon = {
+                    Icon(
+                        painter = painterResource(R.drawable.mdi__eye_off),
+                        contentDescription = "Password Icon",
+                        modifier = Modifier.size(20.dp)
+                    )
+                },
                 visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 modifier = Modifier.fillMaxWidth(),
