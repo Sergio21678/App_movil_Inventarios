@@ -50,7 +50,7 @@ fun LoginScreen(onLoginSuccess: () -> Unit = {}) {
         ) {
             // Icono en el centro
             Image(
-                painter = painterResource(R.drawable.image_login), // Reemplaza con tu icono
+                painter = painterResource(R.drawable.inventory), // Reemplaza con tu icono
                 contentDescription = "Center Icon",
                 modifier = Modifier.size(128.dp)
             )
@@ -130,34 +130,44 @@ fun LoginScreen(onLoginSuccess: () -> Unit = {}) {
 
 @Composable
 fun BackgroundShapes(modifier: Modifier = Modifier) {
-    val primaryColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f)
-    val secondaryColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.3f)
+    val primaryColor = MaterialTheme.colorScheme.primary
+    val secondaryColor = MaterialTheme.colorScheme.secondary
+    val tertiaryColor = MaterialTheme.colorScheme.tertiary
 
     Canvas(modifier = modifier.fillMaxSize()) {
-        // Dibuja un cuadrado muy grande en la parte inferior
+        // Dibuja un cuadrado muy grande en la parte inferior derecha
         drawRect(
             color = secondaryColor,
-            topLeft = Offset(x = size.width * 0.2f, y = size.height * 0.7f),
-            size = androidx.compose.ui.geometry.Size(600f, 600f)
+            topLeft = Offset(x = size.width * 0.2f, y = size.height * 0.4f),
+            size = androidx.compose.ui.geometry.Size(1000f, 1000f)
         )
 
-        // Dibuja un triángulo muy grande en el centro a la izquierda
-        val path = androidx.compose.ui.graphics.Path().apply {
-            moveTo(size.width * 0.1f, size.height * 0.4f)
-            lineTo(size.width * 0.4f, size.height * 0.9f)
-            lineTo(size.width * 0.1f, size.height * 0.9f)
-            close()
-        }
-        drawPath(
-            path = path,
-            color = primaryColor
-        )
-
-        // Dibuja un círculo muy grande
+        // Dibuja un círculo muy grande en la parte superior izquierda
         drawCircle(
             color = primaryColor,
             radius = 600f,
-            center = Offset(x = size.width * 0.1f, y = size.height * 0.3f)
+            center = Offset(x = size.width * 0.5f, y = size.height * 0.10f)
+        )
+
+        // Dibuja un círculo adicional en la parte superior derecha
+        drawCircle(
+            color = tertiaryColor,
+            radius = 400f,
+            center = Offset(x = size.width * 0.8f, y = size.height * 0.5f)
+        )
+
+        // Dibuja un círculo adicional en el centro
+        drawCircle(
+            color = primaryColor,
+            radius = 300f,
+            center = Offset(x = size.width * 0.5f, y = size.height * 0.4f)
+        )
+
+        // Dibuja un círculo adicional en la parte inferior izquierda
+        drawCircle(
+            color = secondaryColor,
+            radius = 1000f,
+            center = Offset(x = size.width * 0.2f, y = size.height * 0.8f)
         )
     }
 }
