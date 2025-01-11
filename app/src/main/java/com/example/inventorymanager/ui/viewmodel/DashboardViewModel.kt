@@ -1,12 +1,7 @@
 package com.example.inventorymanager.ui.viewmodel
 
-<<<<<<< HEAD
-=======
-
-
-import android.util.Log
->>>>>>> 1fa3ed0 (Configuracion de un navbar simple de navegacion, pantalla de movimientos, opciones de agregar y retirar productos)
 import androidx.lifecycle.LiveData
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -40,31 +35,6 @@ class DashboardViewModel(private val repository: ProductRepository? = null) : Vi
                 println("Excepción al obtener productos: ${e.message}")
             }
         }
-
-        _products.value = listOf(
-            Product(
-                id = 1,
-                nombre = "Producto 1",
-                precio = 10.0,
-                stock = 100,
-                descripcion = "Descripción del Producto 1",
-                categoria_nombre = "Categoría 1",
-                codigo = "P001",
-                categoria = "Categoría 1",
-                fecha_creacion = "2023-10-01"
-            ),
-            Product(
-                id = 2,
-                nombre = "Producto 2",
-                precio = 20.0,
-                stock = 200,
-                descripcion = "Descripción del Producto 2",
-                categoria_nombre = "Categoría 2",
-                codigo = "P002",
-                categoria = "Categoría 2",
-                fecha_creacion = "2023-10-01"
-            )
-        )
     }
 
     fun login(username: String, password: String, onSuccess: (String, String) -> Unit, onFailure: (Throwable) -> Unit) {
@@ -111,9 +81,6 @@ class DashboardViewModel(private val repository: ProductRepository? = null) : Vi
             }
         }
     }
-<<<<<<< HEAD
-}
-=======
 
     fun realizarMovimiento(productId: Int, tipo: String, cantidad: Int) {
         viewModelScope.launch {
@@ -125,24 +92,15 @@ class DashboardViewModel(private val repository: ProductRepository? = null) : Vi
                     producto = productId, // Ahora se llama 'producto'
                     fecha = null // Backend puede asignar la fecha
                 )
-                val response = repository.createMovimiento(movimiento)
-                if (response.isSuccessful) {
+                val response = repository?.createMovimiento(movimiento)
+                if (response != null && response.isSuccessful) {
                     Log.d("Movimiento", "Movimiento registrado: ${response.body()}")
                 } else {
-                    Log.e("Movimiento", "Error en la API: ${response.errorBody()?.string()}")
+                    Log.e("Movimiento", "Error en la API: ${response?.errorBody()?.string()}")
                 }
             } catch (e: Exception) {
                 Log.e("Movimiento", "Error al realizar movimiento: ${e.message}")
             }
         }
     }
-
-
-
-
-
-
-
 }
-
->>>>>>> 1fa3ed0 (Configuracion de un navbar simple de navegacion, pantalla de movimientos, opciones de agregar y retirar productos)

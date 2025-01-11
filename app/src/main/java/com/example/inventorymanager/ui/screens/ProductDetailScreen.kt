@@ -1,10 +1,9 @@
 package com.example.inventorymanager.ui.screens
 
-<<<<<<< HEAD
+
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
-=======
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,7 +14,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
->>>>>>> 1fa3ed0 (Configuracion de un navbar simple de navegacion, pantalla de movimientos, opciones de agregar y retirar productos)
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -28,8 +26,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.inventorymanager.data.model.Product
-<<<<<<< HEAD
 import com.example.inventorymanager.ui.theme.InventoryManagerTheme
+import com.example.inventorymanager.ui.viewmodel.DashboardViewModel
 
 @Composable
 fun ProductDetailScreen(product: Product) {
@@ -160,27 +158,6 @@ fun ProductDetailBackgroundShapes(modifier: Modifier = Modifier) {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun ProductDetailScreenPreview() {
-    InventoryManagerTheme {
-        ProductDetailScreen(
-            product = Product(
-                id = 1,
-                nombre = "Producto de Ejemplo",
-                precio = 100.0,
-                stock = 50,
-                descripcion = "Este es un producto de ejemplo.",
-                categoria_nombre = "Categoría de Ejemplo",
-                codigo = "P001",
-                categoria = "Categoría de Ejemplo",
-                fecha_creacion = "2023-10-01"
-            )
-        )
-    }
-=======
-import androidx.compose.ui.Modifier
-import com.example.inventorymanager.ui.viewmodel.DashboardViewModel
 
 
 @Composable
@@ -245,8 +222,11 @@ fun ProductDetailScreen(product: Product, viewModel: DashboardViewModel) {
         Spacer(modifier = Modifier.height(16.dp))
 
         if (mensaje.isNotEmpty()) {
-            Text(text = mensaje, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
+            Text(
+                text = mensaje,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.primary
+            )
         }
     }
->>>>>>> 1fa3ed0 (Configuracion de un navbar simple de navegacion, pantalla de movimientos, opciones de agregar y retirar productos)
 }

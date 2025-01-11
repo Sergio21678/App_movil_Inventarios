@@ -69,20 +69,15 @@ fun NavGraph(navController: NavHostController, apiService: ApiService) {
                 )
             }
         }
-        composable(
-            route = "product_detail/{productId}"
-        ) { backStackEntry ->
+        composable("product_detail/{productId}") { backStackEntry ->
             val productId = backStackEntry.arguments?.getString("productId")?.toIntOrNull()
             val product = dashboardViewModel.products.value?.find { it.id == productId }
 
             if (product != null) {
                 ProductDetailScreen(product = product, viewModel = dashboardViewModel)
             } else {
-                // Manejo de errores: Si el producto no existe
                 Text(text = "Producto no encontrado")
             }
         }
-
-
     }
 }

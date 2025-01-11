@@ -23,6 +23,9 @@ import com.example.inventorymanager.data.remote.RetrofitClient
 import com.example.inventorymanager.data.repository.ProductRepository
 import com.example.inventorymanager.ui.theme.InventoryManagerTheme
 import com.example.inventorymanager.ui.viewmodel.LoginViewModel
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.TextFieldDefaults
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -76,9 +79,9 @@ fun LoginScreen(onLoginSuccess: () -> Unit = {}) {
                     )
                 },
                 modifier = Modifier.fillMaxWidth(),
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = MaterialTheme.colorScheme.primary,
-                    unfocusedBorderColor = MaterialTheme.colorScheme.onSurface
+                colors = TextFieldDefaults.colors(
+                    focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                    unfocusedIndicatorColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
                 )
             )
             Spacer(modifier = Modifier.height(8.dp))
@@ -98,9 +101,9 @@ fun LoginScreen(onLoginSuccess: () -> Unit = {}) {
                 visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 modifier = Modifier.fillMaxWidth(),
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = MaterialTheme.colorScheme.primary,
-                    unfocusedBorderColor = MaterialTheme.colorScheme.onSurface
+                colors = TextFieldDefaults.colors(
+                    focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                    unfocusedIndicatorColor = MaterialTheme.colorScheme.onSurface
                 )
             )
             Spacer(modifier = Modifier.height(16.dp))
