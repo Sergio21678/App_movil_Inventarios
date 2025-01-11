@@ -45,4 +45,27 @@ class MovimientosViewModel(private val repository: ProductRepository) : ViewMode
             }
         }
     }
+
+    fun searchMovimientos(
+        producto_nombre: String? = null,
+        tipo: String? = null,
+        cantidad: Int? = null,
+        fecha: String? = null
+
+    ) {
+        viewModelScope.launch {
+            try {
+                val response = repository.searchMovimientos(producto_nombre, tipo, cantidad, fecha)
+                if (response.isSuccessful) {
+                    _movimientos.postValue(response.body() ?: emptyList())
+                } else {
+                    println("Error al buscar movimientos: ${response.code()}")
+                }
+            } catch (e: Exception) {
+                println("Excepción al buscar movimientos: ${e.message}")
+            }
+        }
+    }
+
+
 }

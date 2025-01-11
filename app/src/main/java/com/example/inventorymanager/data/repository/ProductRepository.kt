@@ -65,4 +65,14 @@ class ProductRepository(private val apiService: ApiService) {
     suspend fun addMovimiento(productId: Int, tipo: String, cantidad: Int): Response<Unit> {
         return apiService.addMovimiento(productId, tipo, cantidad)
     }
+
+    // Buscar movimientos por tipo, nombre de producto o fecha
+    suspend fun searchMovimientos(
+        producto_nombre: String? = null,
+        tipo: String? = null,
+        cantidad: Int? = null,
+        fecha: String? = null
+    ): Response<List<Movimiento>> {
+        return apiService.searchMovimientos(producto_nombre, tipo, cantidad, fecha)
+    }
 }

@@ -45,6 +45,9 @@ interface ApiService {
     @GET("api/products/{id}/")
     suspend fun getProductById(@Path("id") productId: Int): Response<Product>
 
+    @GET("movimientos/search")
+    suspend fun searchMovimientos(@Query("producto_nombre") productoNombre: String): Response<List<Movimiento>>
+
     @POST("movimientos/")
     suspend fun createMovimiento(
         @Body movimiento: Movimiento
@@ -63,5 +66,13 @@ interface ApiService {
         @Field("tipo") tipo: String,
         @Field("cantidad") cantidad: Int
     ): Response<Unit>
+
+    @GET("movimientos/busqueda/")
+    suspend fun searchMovimientos(
+        @Query("producto_nombre") producto: String? = null,
+        @Query("tipo") tipo: String? = null,
+        @Query("cantidad") cantidad: Int? = null,
+        @Query("fecha") fecha: String? = null
+    ): Response<List<Movimiento>>
 
 }
