@@ -23,10 +23,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.inventorymanager.data.model.Product
-import com.example.inventorymanager.ui.theme.InventoryManagerTheme
 import com.example.inventorymanager.ui.viewmodel.DashboardViewModel
 
 @Composable

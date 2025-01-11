@@ -26,8 +26,6 @@ import com.example.inventorymanager.ui.viewmodel.LoginViewModel
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.TextFieldDefaults
 
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(onLoginSuccess: () -> Unit = {}) {
     val context = LocalContext.current
@@ -148,21 +146,21 @@ fun BackgroundShapes(modifier: Modifier = Modifier) {
         // Dibuja un círculo muy grande en la parte superior izquierda
         drawCircle(
             color = primaryColor,
-            radius = 600f,
+            radius = 900f,
             center = Offset(x = size.width * 0.5f, y = size.height * 0.10f)
         )
 
         // Dibuja un círculo adicional en la parte superior derecha
         drawCircle(
             color = tertiaryColor,
-            radius = 400f,
+            radius = 700f,
             center = Offset(x = size.width * 0.8f, y = size.height * 0.5f)
         )
 
         // Dibuja un círculo adicional en el centro
         drawCircle(
             color = primaryColor,
-            radius = 300f,
+            radius = 390f,
             center = Offset(x = size.width * 0.5f, y = size.height * 0.4f)
         )
 

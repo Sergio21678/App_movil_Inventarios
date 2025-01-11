@@ -10,9 +10,9 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class MovimientosViewModel(private val repository: ProductRepository) : ViewModel() {
+open class MovimientosViewModel(private val repository: ProductRepository) : ViewModel() {
 
-    private val _movimientos = MutableLiveData<List<Movimiento>>()
+    val _movimientos = MutableLiveData<List<Movimiento>>()
     val movimientos: LiveData<List<Movimiento>> get() = _movimientos
 
     private fun formatFecha(fecha: String?): String {
@@ -66,6 +66,4 @@ class MovimientosViewModel(private val repository: ProductRepository) : ViewMode
             }
         }
     }
-
-
 }
