@@ -1,9 +1,16 @@
 package com.example.inventorymanager.ui.viewmodel
 
+<<<<<<< HEAD
+=======
+
+
+import android.util.Log
+>>>>>>> 1fa3ed0 (Configuracion de un navbar simple de navegacion, pantalla de movimientos, opciones de agregar y retirar productos)
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.inventorymanager.data.model.Movimiento
 import com.example.inventorymanager.data.model.Product
 import com.example.inventorymanager.data.repository.ProductRepository
 import kotlinx.coroutines.launch
@@ -104,4 +111,38 @@ class DashboardViewModel(private val repository: ProductRepository? = null) : Vi
             }
         }
     }
+<<<<<<< HEAD
 }
+=======
+
+    fun realizarMovimiento(productId: Int, tipo: String, cantidad: Int) {
+        viewModelScope.launch {
+            try {
+                val movimiento = Movimiento(
+                    id = null, // ID lo genera el backend
+                    tipo = tipo,
+                    cantidad = cantidad,
+                    producto = productId, // Ahora se llama 'producto'
+                    fecha = null // Backend puede asignar la fecha
+                )
+                val response = repository.createMovimiento(movimiento)
+                if (response.isSuccessful) {
+                    Log.d("Movimiento", "Movimiento registrado: ${response.body()}")
+                } else {
+                    Log.e("Movimiento", "Error en la API: ${response.errorBody()?.string()}")
+                }
+            } catch (e: Exception) {
+                Log.e("Movimiento", "Error al realizar movimiento: ${e.message}")
+            }
+        }
+    }
+
+
+
+
+
+
+
+}
+
+>>>>>>> 1fa3ed0 (Configuracion de un navbar simple de navegacion, pantalla de movimientos, opciones de agregar y retirar productos)

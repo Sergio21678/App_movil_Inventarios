@@ -23,15 +23,52 @@ import com.example.inventorymanager.ui.theme.InventoryManagerTheme
 import com.example.inventorymanager.ui.viewmodel.DashboardViewModel
 
 @Composable
+<<<<<<< HEAD
 fun DashboardScreen(navController: NavController, viewModel: DashboardViewModel = viewModel()) {
     val products by viewModel.products.observeAsState(emptyList())
+=======
+fun DashboardScreen(
+    navController: NavController,
+    viewModel: DashboardViewModel,
+    modifier: Modifier = Modifier // Declarar el parámetro `modifier`
+) {
+    val products by viewModel.products.observeAsState(emptyList())
+    var searchQuery by remember { mutableStateOf("") }
+    var categoryFilter by remember { mutableStateOf("") }
+    var minPriceFilter by remember { mutableStateOf("") }
+    var maxPriceFilter by remember { mutableStateOf("") }
+
+    // Filtrar productos basados en búsqueda y filtros
+    val filteredProducts = products.orEmpty().filter { product ->
+        (searchQuery.isEmpty() || product.nombre.contains(searchQuery, ignoreCase = true)) &&
+                (categoryFilter.isEmpty() || product.categoria_nombre?.contains(categoryFilter, ignoreCase = true) == true) &&
+                (minPriceFilter.isBlank() || product.precio >= minPriceFilter.toDoubleOrNull() ?: Double.MIN_VALUE) &&
+                (maxPriceFilter.isBlank() || product.precio <= maxPriceFilter.toDoubleOrNull() ?: Double.MAX_VALUE)
+    }
+>>>>>>> 1fa3ed0 (Configuracion de un navbar simple de navegacion, pantalla de movimientos, opciones de agregar y retirar productos)
 
     LaunchedEffect(Unit) {
         viewModel.fetchProducts()
     }
 
+<<<<<<< HEAD
     Box(modifier = Modifier.fillMaxSize()) {
         DashboardBackgroundShapes() // Add the background shapes
+=======
+    Column(
+        modifier = modifier // Utilizar el `modifier`
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
+        Text(
+            text = "Lista de Productos",
+            style = MaterialTheme.typography.headlineSmall.copy(
+                color = MaterialTheme.colorScheme.primary,
+                fontWeight = FontWeight.Bold
+            ),
+            modifier = Modifier.padding(vertical = 16.dp)
+        )
+>>>>>>> 1fa3ed0 (Configuracion de un navbar simple de navegacion, pantalla de movimientos, opciones de agregar y retirar productos)
 
         Column(
             modifier = Modifier
@@ -47,6 +84,7 @@ fun DashboardScreen(navController: NavController, viewModel: DashboardViewModel 
                 modifier = Modifier.padding(vertical = 16.dp)
             )
 
+<<<<<<< HEAD
             LazyColumn {
                 products?.groupBy { it.categoria_nombre }?.forEach { (categoriaNombre, productos) ->
                     item {
@@ -80,6 +118,36 @@ fun DashboardScreen(navController: NavController, viewModel: DashboardViewModel 
                                     style = MaterialTheme.typography.bodyLarge.copy(
                                         fontWeight = FontWeight.Bold
                                     )
+=======
+        LazyColumn {
+            filteredProducts.groupBy { it.categoria_nombre }.forEach { (categoriaNombre, productos) ->
+                item {
+                    Text(
+                        text = categoriaNombre ?: "Sin Categoría",
+                        style = MaterialTheme.typography.headlineSmall.copy(
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.primary
+                        ),
+                        modifier = Modifier.padding(vertical = 8.dp)
+                    )
+                }
+                items(productos) { product ->
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 4.dp)
+                            .clickable {
+                                // Navega a la pantalla de detalles del producto
+                                navController.navigate("product_detail/${product.id}")
+                            },
+                        elevation = CardDefaults.cardElevation(4.dp)
+                    ) {
+                        Column(modifier = Modifier.padding(16.dp)) {
+                            Text(
+                                text = product.nombre,
+                                style = MaterialTheme.typography.bodyLarge.copy(
+                                    fontWeight = FontWeight.Bold
+>>>>>>> 1fa3ed0 (Configuracion de un navbar simple de navegacion, pantalla de movimientos, opciones de agregar y retirar productos)
                                 )
                                 Text(
                                     text = "Precio: ${product.precio} | Stock: ${product.stock}",
@@ -98,6 +166,7 @@ fun DashboardScreen(navController: NavController, viewModel: DashboardViewModel 
     }
 }
 
+<<<<<<< HEAD
 @Composable
 fun DashboardBackgroundShapes(modifier: Modifier = Modifier) {
     val primaryColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
@@ -137,3 +206,6 @@ fun DashboardScreenPreview() {
         )
     }
 }
+=======
+
+>>>>>>> 1fa3ed0 (Configuracion de un navbar simple de navegacion, pantalla de movimientos, opciones de agregar y retirar productos)

@@ -1,9 +1,26 @@
 package com.example.inventorymanager.ui.screens
 
+<<<<<<< HEAD
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
+=======
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+>>>>>>> 1fa3ed0 (Configuracion de un navbar simple de navegacion, pantalla de movimientos, opciones de agregar y retirar productos)
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -11,6 +28,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.inventorymanager.data.model.Product
+<<<<<<< HEAD
 import com.example.inventorymanager.ui.theme.InventoryManagerTheme
 
 @Composable
@@ -160,4 +178,75 @@ fun ProductDetailScreenPreview() {
             )
         )
     }
+=======
+import androidx.compose.ui.Modifier
+import com.example.inventorymanager.ui.viewmodel.DashboardViewModel
+
+
+@Composable
+fun ProductDetailScreen(product: Product, viewModel: DashboardViewModel) {
+    var cantidad by remember { mutableStateOf("") }
+    var mensaje by remember { mutableStateOf("") }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = product.nombre,
+            style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(text = "Código: ${product.codigo}")
+        Text(text = "Descripción: ${product.descripcion}")
+        Text(text = "Stock: ${product.stock}")
+        Text(text = "Precio: ${product.precio} PEN")
+        Text(text = "Categoria: ${product.categoria_nombre}")
+        Text(text = "Fecha de creación: ${product.fecha_creacion}")
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Campo para ingresar la cantidad
+        OutlinedTextField(
+            value = cantidad,
+            onValueChange = { cantidad = it },
+            label = { Text("Cantidad") },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Botón de entrada
+        Button(
+            onClick = {
+                viewModel.realizarMovimiento(product.id, "entrada", cantidad.toIntOrNull() ?: 0)
+                mensaje = "Entrada realizada con éxito"
+            },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Registrar Entrada")
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // Botón de salida
+        Button(
+            onClick = {
+                viewModel.realizarMovimiento(product.id, "salida", cantidad.toIntOrNull() ?: 0)
+                mensaje = "Salida realizada con éxito"
+            },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Registrar Salida")
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        if (mensaje.isNotEmpty()) {
+            Text(text = mensaje, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
+        }
+    }
+>>>>>>> 1fa3ed0 (Configuracion de un navbar simple de navegacion, pantalla de movimientos, opciones de agregar y retirar productos)
 }

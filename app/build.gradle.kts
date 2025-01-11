@@ -51,6 +51,10 @@ android {
 
 dependencies {
 
+    implementation("androidx.compose.material3:material3:1.3.1") // Versión reciente
+    implementation("androidx.navigation:navigation-compose:2.8.5")
+    implementation("androidx.compose.material:material-icons-core:1.4.3")
+    implementation("androidx.compose.material:material-icons-extended:1.4.3")
     implementation("com.squareup.okhttp3:okhttp:4.9.3")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
