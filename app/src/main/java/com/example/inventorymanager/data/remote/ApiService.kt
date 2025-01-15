@@ -1,6 +1,7 @@
 package com.example.inventorymanager.data.remote
 
 import android.telecom.Call
+import com.example.inventorymanager.data.model.Categoria
 import com.example.inventorymanager.data.model.Movimiento
 import com.example.inventorymanager.data.model.Product
 import com.example.inventorymanager.data.model.TokenResponse
@@ -33,7 +34,7 @@ interface ApiService {
     @GET("productos/")
     suspend fun getProducts(): Response<List<Product>>
 
-    @POST("products")
+    @POST("productos/")
     suspend fun addProduct(@Body product: Product): Response<Product>
 
     @POST("token/")
@@ -75,4 +76,9 @@ interface ApiService {
         @Query("fecha") fecha: String? = null
     ): Response<List<Movimiento>>
 
+    @GET("api/productos/codigo/{codigo}/")
+    suspend fun getProductoPorCodigo(@Path("codigo") codigo: String): Response<Product>
+
+    @GET("categorias/")
+    suspend fun getCategorias(): Response<List<Categoria>>
 }

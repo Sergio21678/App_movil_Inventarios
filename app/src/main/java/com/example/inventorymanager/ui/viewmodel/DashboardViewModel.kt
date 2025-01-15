@@ -5,15 +5,29 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import com.example.inventorymanager.data.model.Categoria
 import com.example.inventorymanager.data.model.Movimiento
 import com.example.inventorymanager.data.model.Product
 import com.example.inventorymanager.data.repository.ProductRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import retrofit2.Response
 
 class DashboardViewModel(private val repository: ProductRepository? = null) : ViewModel() {
 
     private val _products = MutableLiveData<List<Product>?>()
     val products: LiveData<List<Product>?> get() = _products
+
+    private val _producto = MutableLiveData<Product?>()
+    val producto: LiveData<Product?> get() = _producto
+
+    private val _categorias = MutableStateFlow<List<Categoria>>(emptyList())
+    val categorias: StateFlow<List<Categoria>> = _categorias
+
 
     fun fetchProducts() {
         viewModelScope.launch {
@@ -103,4 +117,91 @@ class DashboardViewModel(private val repository: ProductRepository? = null) : Vi
             }
         }
     }
+
+    fun buscarProductoPorCodigo(codigo: String) {
+        viewModelScope.launch {
+            try {
+                val response = repository?.getProductoPorCodigo(codigo)
+                if (response != null && response.isSuccessful) {
+                    _producto.postValue(response.body())
+                } else {
+                    _producto.postValue(null)
+                }
+            } catch (e: Exception) {
+                Log.e("Error", "Error al buscar producto: ${e.message}")
+                _producto.postValue(null)
+            }
+        }
+    }
+
+    fun addProduct(nombre: String, descripcion: String, codigo: String, stock: Int, precio: Double, categoriaId: Int) {
+        viewModelScope.launch {
+            val nuevoProducto = Product(
+                id = 0,
+                nombre = nombre,
+                descripcion = descripcion,
+                codigo = codigo,
+                stock = stock,
+                precio = precio,
+                categoria = categoriaId,
+                categoria_nombre = null,
+                fecha_creacion = ""
+
+            )
+            repository?.addProduct(nuevoProducto)
+            try {
+                val response = repository?.addProduct(nuevoProducto)
+                if (response != null && response.isSuccessful) {
+                    Log.d("Producto", "Producto creado: ${response.body()}")
+                } else {
+                    Log.e("Producto", "Error al crear producto: ${response?.errorBody()?.string()}")
+                }
+            } catch (e: Exception) {
+                Log.e("Producto", "Excepción al crear producto: ${e.message}")
+            }
+        }
+    }
+
+    fun fetchCategorias() {
+        viewModelScope.launch {
+            try {
+                val response = repository?.getCategorias()
+                if (response != null &&response.isSuccessful) {
+                    _categorias.value = response.body() ?: emptyList()
+                } else {
+                    Log.e("Categoría", "Error en la respuesta: ${response?.errorBody()?.string()}")
+                }
+            } catch (e: Exception) {
+                Log.e("Categoría", "Error al cargar categorías: ${e.message}")
+            }
+        }
+    }
+
+    fun buscarProductoYRedirigir(navController: NavController, codigo: String) {
+        viewModelScope.launch {
+            try {
+                val response = repository?.getProductoPorCodigo(codigo)
+                if (response != null && response.isSuccessful) {
+                    val productoExistente = response.body()
+                    if (productoExistente != null) {
+                        // Producto encontrado, redirigir a detalles
+                        navController.navigate("product_detail/${productoExistente.id}")
+                    } else {
+                        // Producto no encontrado, redirigir a crear nuevo producto
+                        navController.navigate("add_product/$codigo")
+                    }
+                } else {
+                    // Error en la respuesta, redirigir a crear producto
+                    navController.navigate("add_product/$codigo")
+                }
+            } catch (e: Exception) {
+                // En caso de error, redirigir a crear producto
+                navController.navigate("add_product/$codigo")
+            }
+        }
+    }
+
+
+
+
 }

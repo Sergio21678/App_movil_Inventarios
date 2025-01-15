@@ -34,7 +34,10 @@ fun DashboardScreen(
     // Filtrar productos según búsqueda y filtros
     val filteredProducts = products.orEmpty().filter { product ->
         (searchQuery.isEmpty() || product.nombre.contains(searchQuery, ignoreCase = true)) &&
-                (categoryFilter.isEmpty() || product.categoria_nombre?.contains(categoryFilter, ignoreCase = true) == true) &&
+                (categoryFilter.isEmpty() || product.categoria_nombre?.contains(
+                    categoryFilter,
+                    ignoreCase = true
+                ) == true) &&
                 (minPriceFilter.isBlank() || product.precio >= minPriceFilter.toDoubleOrNull() ?: Double.MIN_VALUE) &&
                 (maxPriceFilter.isBlank() || product.precio <= maxPriceFilter.toDoubleOrNull() ?: Double.MAX_VALUE)
     }
@@ -42,94 +45,111 @@ fun DashboardScreen(
     LaunchedEffect(Unit) {
         viewModel.fetchProducts()
     }
+    Box(modifier = modifier.fillMaxSize()) {
 
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        Text(
-            text = "Lista de Productos",
-            style = MaterialTheme.typography.headlineSmall.copy(
-                color = MaterialTheme.colorScheme.primary,
-                fontWeight = FontWeight.Bold
-            ),
-            modifier = Modifier.padding(vertical = 16.dp)
-        )
+        // Fondo Decorativo
+        DashboardBackgroundShapes()
 
-        // Campos de búsqueda y filtros
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            TextField(
-                value = searchQuery,
-                onValueChange = { searchQuery = it },
-                label = { Text("Buscar producto") },
-                modifier = Modifier.weight(1f).padding(end = 8.dp)
+        // Contenido Principal
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(25.dp)
+        ) {
+            Text(
+                text = "Lista de Productos",
+                style = MaterialTheme.typography.headlineSmall.copy(
+                    color = MaterialTheme.colorScheme.primary,
+                    fontWeight = FontWeight.Bold
+                ),
+                modifier = Modifier.padding(vertical = 20.dp)
             )
-            TextField(
-                value = categoryFilter,
-                onValueChange = { categoryFilter = it },
-                label = { Text("Categoría") },
-                modifier = Modifier.weight(1f)
-            )
-        }
 
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            TextField(
-                value = minPriceFilter,
-                onValueChange = { minPriceFilter = it },
-                label = { Text("Precio Mín") },
-                modifier = Modifier.weight(1f).padding(end = 8.dp)
-            )
-            TextField(
-                value = maxPriceFilter,
-                onValueChange = { maxPriceFilter = it },
-                label = { Text("Precio Máx") },
-                modifier = Modifier.weight(1f)
-            )
-        }
+            // Campos de búsqueda y filtros
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                TextField(
+                    value = searchQuery,
+                    onValueChange = { searchQuery = it },
+                    label = { Text("Buscar producto") },
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(end = 8.dp)
+                )
+                TextField(
+                    value = categoryFilter,
+                    onValueChange = { categoryFilter = it },
+                    label = { Text("Categoría") },
+                    modifier = Modifier.weight(1f)
+                )
+            }
 
-        Spacer(modifier = Modifier.height(16.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                TextField(
+                    value = minPriceFilter,
+                    onValueChange = { minPriceFilter = it },
+                    label = { Text("Precio Mín") },
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(end = 8.dp)
+                )
+                TextField(
+                    value = maxPriceFilter,
+                    onValueChange = { maxPriceFilter = it },
+                    label = { Text("Precio Máx") },
+                    modifier = Modifier.weight(1f)
+                )
+            }
 
-        LazyColumn {
-            filteredProducts.groupBy { it.categoria_nombre }.forEach { (categoriaNombre, productos) ->
-                item {
-                    Text(
-                        text = categoriaNombre ?: "Sin Categoría",
-                        style = MaterialTheme.typography.headlineSmall.copy(
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.primary
-                        ),
-                        modifier = Modifier.padding(vertical = 8.dp)
-                    )
-                }
-                items(productos) { product ->
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 4.dp)
-                            .clickable {
-                                navController.navigate("product_detail/${product.id}")
-                            },
-                        elevation = CardDefaults.cardElevation(4.dp)
-                    ) {
-                        Column(modifier = Modifier.padding(16.dp)) {
+            Spacer(modifier = Modifier.height(16.dp))
+
+            LazyColumn {
+                filteredProducts.groupBy { it.categoria_nombre }
+                    .forEach { (categoriaNombre, productos) ->
+                        item {
                             Text(
-                                text = product.nombre,
-                                style = MaterialTheme.typography.bodyLarge.copy(
-                                    fontWeight = FontWeight.Bold
-                                )
-                            )
-                            Text(
-                                text = "Precio: ${product.precio} | Stock: ${product.stock}",
-                                style = MaterialTheme.typography.bodyMedium
-                            )
-                            Text(
-                                text = "Descripción: ${product.descripcion}",
-                                style = MaterialTheme.typography.bodySmall
+                                text = categoriaNombre ?: "Sin Categoría",
+                                style = MaterialTheme.typography.headlineSmall.copy(
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.primary
+                                ),
+                                modifier = Modifier.padding(vertical = 10.dp)
                             )
                         }
+                        items(productos) { product ->
+                            Card(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 10.dp)
+                                    .clickable {
+                                        navController.navigate("product_detail/${product.id}")
+                                    },
+                                elevation = CardDefaults.cardElevation(10.dp)
+                            ) {
+                                Column(modifier = Modifier.padding(18.dp)) {
+                                    Text(
+                                        text = product.nombre,
+                                        style = MaterialTheme.typography.bodyLarge.copy(
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                    )
+                                    Text(
+                                        text = "Precio: ${product.precio} | Stock: ${product.stock}",
+                                        style = MaterialTheme.typography.bodyMedium
+                                    )
+                                    Text(
+                                        text = "Descripción: ${product.descripcion}",
+                                        style = MaterialTheme.typography.bodySmall
+                                    )
+                                }
+                            }
+                        }
                     }
-                }
             }
         }
     }

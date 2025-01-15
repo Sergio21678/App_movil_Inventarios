@@ -10,6 +10,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
 
@@ -40,6 +41,16 @@ fun BottomNavBar(navController: NavController) {
                         popUpTo(Screen.Dashboard.route) { inclusive = false }
                     }
                 }
+            }
+        )
+        NavigationBarItem(
+            icon = {
+                Icon(Icons.Default.CameraAlt, contentDescription = "Escanear")
+            },
+            label = { Text("Escanear") },
+            selected = false,
+            onClick = {
+                navController.navigate("barcode_scanner")
             }
         )
     }

@@ -1,5 +1,6 @@
 package com.example.inventorymanager.data.repository
 
+import com.example.inventorymanager.data.model.Categoria
 import com.example.inventorymanager.data.model.Movimiento
 import com.example.inventorymanager.data.model.Product
 import com.example.inventorymanager.data.model.TokenResponse
@@ -75,4 +76,13 @@ class ProductRepository(private val apiService: ApiService) {
     ): Response<List<Movimiento>> {
         return apiService.searchMovimientos(producto_nombre, tipo, cantidad, fecha)
     }
+
+    suspend fun getProductoPorCodigo(codigo: String): Response<Product> {
+        return apiService.getProductoPorCodigo(codigo)
+    }
+
+    suspend fun getCategorias(): Response<List<Categoria>> {
+        return apiService.getCategorias()
+    }
+
 }

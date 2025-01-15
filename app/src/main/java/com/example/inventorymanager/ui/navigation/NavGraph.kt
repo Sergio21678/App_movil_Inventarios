@@ -1,8 +1,12 @@
 package com.example.inventorymanager.ui.navigation
 
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -14,6 +18,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.inventorymanager.data.remote.ApiService
 import com.example.inventorymanager.data.repository.ProductRepository
+import com.example.inventorymanager.ui.screens.AddProductScreen
+import com.example.inventorymanager.ui.screens.BarcodeScannerScreen
 import com.example.inventorymanager.ui.screens.DashboardScreen
 import com.example.inventorymanager.ui.screens.LoginScreen
 import com.example.inventorymanager.ui.screens.MovimientosScreen
@@ -26,6 +32,9 @@ sealed class Screen(val route: String) {
     object Login : Screen("login")
     object Dashboard : Screen("dashboard")
     object Movimientos : Screen("movimientos")
+    object BarcodeScanner : Screen("barcode_scanner")
+    object ProductDetail : Screen("product_detail/{id}")
+    object AddProduct : Screen("add_product/{codigo}")
 }
 
 @Composable
@@ -40,6 +49,7 @@ fun NavGraph(navController: NavHostController, apiService: ApiService) {
         navController = navController,
         startDestination = Screen.Login.route
     ) {
+        // 🟢 Pantalla de Login
         composable(Screen.Login.route) {
             LoginScreen(onLoginSuccess = {
                 navController.navigate(Screen.Dashboard.route) {
@@ -47,9 +57,19 @@ fun NavGraph(navController: NavHostController, apiService: ApiService) {
                 }
             })
         }
+
+        // 🟢 Pantalla de Dashboard con botón para escanear código
         composable(Screen.Dashboard.route) {
             Scaffold(
-                bottomBar = { BottomNavBar(navController) }
+                bottomBar = { BottomNavBar(navController) },
+                floatingActionButton = {
+                    IconButton(onClick = {
+                        navController.navigate("barcode_scanner")
+                    }) {
+                        Icon(imageVector = Icons.Default.CameraAlt, contentDescription = "Escanear Código")
+                    }
+
+                }
             ) { innerPadding ->
                 DashboardScreen(
                     navController = navController,
@@ -58,6 +78,8 @@ fun NavGraph(navController: NavHostController, apiService: ApiService) {
                 )
             }
         }
+
+        // 🟢 Pantalla de Movimientos
         composable(Screen.Movimientos.route) {
             Scaffold(
                 bottomBar = { BottomNavBar(navController) }
@@ -69,15 +91,28 @@ fun NavGraph(navController: NavHostController, apiService: ApiService) {
                 )
             }
         }
-        composable("product_detail/{productId}") { backStackEntry ->
-            val productId = backStackEntry.arguments?.getString("productId")?.toIntOrNull()
-            val product = dashboardViewModel.products.value?.find { it.id == productId }
+
+        // 🟢 Pantalla de Detalle del Producto (por código escaneado)
+        composable("add_product/{codigo}") { backStackEntry ->
+            val scannedCode = backStackEntry.arguments?.getString("codigo") ?: ""
+            AddProductScreen(navController = navController, viewModel = dashboardViewModel, scannedCode = scannedCode)
+        }
+
+        composable("product_detail/{id}") { backStackEntry ->
+            val id = backStackEntry.arguments?.getString("id")?.toIntOrNull() ?: -1
+            val product = dashboardViewModel.products.value?.find { it.id == id }
 
             if (product != null) {
                 ProductDetailScreen(product = product, viewModel = dashboardViewModel)
             } else {
                 Text(text = "Producto no encontrado")
             }
+        }
+
+
+        // 🟢 Pantalla del Escáner de Código de Barras
+        composable(Screen.BarcodeScanner.route) {
+            BarcodeScannerScreen(navController = navController, viewModel = dashboardViewModel)
         }
     }
 }
