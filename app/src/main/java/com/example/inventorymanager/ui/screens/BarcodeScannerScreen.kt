@@ -18,10 +18,12 @@ import androidx.navigation.NavController
 import com.example.inventorymanager.ui.viewmodel.DashboardViewModel
 import com.google.zxing.integration.android.IntentIntegrator
 
+// ✅ BarcodeScannerScreen.kt (Corregido)
 @Composable
 fun BarcodeScannerScreen(navController: NavController, viewModel: DashboardViewModel) {
     val context = LocalContext.current
     var scannedCode by remember { mutableStateOf("") }
+    var isScanning by remember { mutableStateOf(false) }
 
     val cameraPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
@@ -31,18 +33,17 @@ fun BarcodeScannerScreen(navController: NavController, viewModel: DashboardViewM
         }
     }
 
-    // Lanzador para el escaneo
     val barcodeLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             val intentResult = IntentIntegrator.parseActivityResult(result.resultCode, result.data)
-            intentResult?.contents?.let { code ->
-                scannedCode = code
+            intentResult?.contents?.let { scannedCode ->
                 viewModel.buscarProductoYRedirigir(navController, scannedCode)
             }
         }
     }
+
 
     Column(
         modifier = Modifier.fillMaxSize().padding(16.dp),
@@ -50,11 +51,14 @@ fun BarcodeScannerScreen(navController: NavController, viewModel: DashboardViewM
         verticalArrangement = Arrangement.Center
     ) {
         Button(onClick = {
-            val integrator = IntentIntegrator(context as Activity)
-            integrator.setPrompt("Escanea el código de barras")
-            integrator.setBeepEnabled(true)
-            integrator.setOrientationLocked(false)
-            barcodeLauncher.launch(integrator.createScanIntent())
+            if (!isScanning) {
+                isScanning = true
+                val integrator = IntentIntegrator(context as Activity)
+                integrator.setPrompt("Escanea el código de barras")
+                integrator.setBeepEnabled(true)
+                integrator.setOrientationLocked(false)
+                barcodeLauncher.launch(integrator.createScanIntent())
+            }
         }) {
             Text("Escanear Código")
         }

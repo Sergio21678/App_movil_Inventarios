@@ -127,7 +127,7 @@ fun DashboardScreen(
                                     .fillMaxWidth()
                                     .padding(vertical = 10.dp)
                                     .clickable {
-                                        navController.navigate("product_detail/${product.id}")
+                                        navController.navigate("product_detail/${product.codigo}")
                                     },
                                 elevation = CardDefaults.cardElevation(10.dp)
                             ) {

@@ -23,7 +23,7 @@ object RetrofitClient {
                 .build()
 
             retrofit = Retrofit.Builder()
-                .baseUrl("http://192.168.0.249:8000/api/") // Cambia por tu URL base
+                .baseUrl("http://192.168.129.49:8000/api/") // Cambia por tu URL base
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
@@ -34,7 +34,7 @@ object RetrofitClient {
     private fun createApiService(): ApiService {
         val client = OkHttpClient.Builder().build()
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://192.168.0.249:8000/api/") // Cambia por tu URL base
+            .baseUrl("http://192.168.129.49:8000/api/") // Cambia por tu URL base
             .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .build()

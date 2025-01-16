@@ -50,7 +50,7 @@ fun BottomNavBar(navController: NavController) {
             label = { Text("Escanear") },
             selected = false,
             onClick = {
-                navController.navigate("barcode_scanner")
+                navController.navigate(Screen.BarcodeScanner.route)
             }
         )
     }

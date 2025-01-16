@@ -76,7 +76,7 @@ interface ApiService {
         @Query("fecha") fecha: String? = null
     ): Response<List<Movimiento>>
 
-    @GET("api/productos/codigo/{codigo}/")
+    @GET("productos/codigo/{codigo}/")
     suspend fun getProductoPorCodigo(@Path("codigo") codigo: String): Response<Product>
 
     @GET("categorias/")

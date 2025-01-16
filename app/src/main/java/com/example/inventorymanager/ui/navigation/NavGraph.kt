@@ -10,6 +10,9 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -27,6 +30,8 @@ import com.example.inventorymanager.ui.screens.ProductDetailScreen
 import com.example.inventorymanager.ui.viewmodel.DashboardViewModel
 import com.example.inventorymanager.ui.viewmodel.MovimientosViewModel
 import com.example.inventorymanager.ui.viewmodel.MovimientosViewModelFactory
+import java.net.URLDecoder
+import java.nio.charset.StandardCharsets
 
 sealed class Screen(val route: String) {
     object Login : Screen("login")
@@ -63,12 +68,9 @@ fun NavGraph(navController: NavHostController, apiService: ApiService) {
             Scaffold(
                 bottomBar = { BottomNavBar(navController) },
                 floatingActionButton = {
-                    IconButton(onClick = {
-                        navController.navigate("barcode_scanner")
-                    }) {
+                    IconButton(onClick = { navController.navigate(Screen.BarcodeScanner.route) }) {
                         Icon(imageVector = Icons.Default.CameraAlt, contentDescription = "Escanear Código")
                     }
-
                 }
             ) { innerPadding ->
                 DashboardScreen(
@@ -92,14 +94,30 @@ fun NavGraph(navController: NavHostController, apiService: ApiService) {
             }
         }
 
+        composable("product_detail/{codigo}") { backStackEntry ->
+            val codigo = backStackEntry.arguments?.getString("codigo") ?: ""
+            dashboardViewModel.buscarProductoPorCodigo(codigo)
+            val product by dashboardViewModel.producto.observeAsState()
+
+            if (product != null) {
+                ProductDetailScreen(product = product!!, viewModel = dashboardViewModel)
+            } else {
+                Text(text = "Producto no encontrado")
+            }
+        }
+
+
         // 🟢 Pantalla de Detalle del Producto (por código escaneado)
         composable("add_product/{codigo}") { backStackEntry ->
-            val scannedCode = backStackEntry.arguments?.getString("codigo") ?: ""
+            val scannedCode = backStackEntry.arguments?.getString("codigo")?.let {
+                URLDecoder.decode(it, StandardCharsets.UTF_8.toString())  // ✅ Decodificar
+            } ?: ""
+
             AddProductScreen(navController = navController, viewModel = dashboardViewModel, scannedCode = scannedCode)
         }
 
-        composable("product_detail/{id}") { backStackEntry ->
-            val id = backStackEntry.arguments?.getString("id")?.toIntOrNull() ?: -1
+        composable(Screen.ProductDetail.route) { backStackEntry ->
+            val id = backStackEntry.arguments?.getString("codigo")?.toIntOrNull() ?: -1
             val product = dashboardViewModel.products.value?.find { it.id == id }
 
             if (product != null) {
@@ -109,10 +127,8 @@ fun NavGraph(navController: NavHostController, apiService: ApiService) {
             }
         }
 
-
         // 🟢 Pantalla del Escáner de Código de Barras
         composable(Screen.BarcodeScanner.route) {
-            BarcodeScannerScreen(navController = navController, viewModel = dashboardViewModel)
+            BarcodeScannerScreen(navController, dashboardViewModel)
         }
-    }
-}
+}}

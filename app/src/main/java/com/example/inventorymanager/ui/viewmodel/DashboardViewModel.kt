@@ -16,6 +16,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import retrofit2.Response
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 class DashboardViewModel(private val repository: ProductRepository? = null) : ViewModel() {
 
@@ -134,6 +136,7 @@ class DashboardViewModel(private val repository: ProductRepository? = null) : Vi
         }
     }
 
+
     fun addProduct(nombre: String, descripcion: String, codigo: String, stock: Int, precio: Double, categoriaId: Int) {
         viewModelScope.launch {
             val nuevoProducto = Product(
@@ -146,8 +149,10 @@ class DashboardViewModel(private val repository: ProductRepository? = null) : Vi
                 categoria = categoriaId,
                 categoria_nombre = null,
                 fecha_creacion = ""
-
             )
+
+            Log.d("Producto", "Enviando producto: $nuevoProducto")  // ✅ Verificar datos
+
             repository?.addProduct(nuevoProducto)
             try {
                 val response = repository?.addProduct(nuevoProducto)
@@ -181,27 +186,33 @@ class DashboardViewModel(private val repository: ProductRepository? = null) : Vi
         viewModelScope.launch {
             try {
                 val response = repository?.getProductoPorCodigo(codigo)
+                val codigoSeguro = URLEncoder.encode(codigo, StandardCharsets.UTF_8.toString())
+
                 if (response != null && response.isSuccessful) {
                     val productoExistente = response.body()
+
                     if (productoExistente != null) {
-                        // Producto encontrado, redirigir a detalles
-                        navController.navigate("product_detail/${productoExistente.id}")
+                        // ✅ Navegar al detalle si el producto existe
+                        navController.navigate("product_detail/$codigoSeguro") {
+                            popUpTo("barcode_scanner") { inclusive = true }
+                        }
                     } else {
-                        // Producto no encontrado, redirigir a crear nuevo producto
-                        navController.navigate("add_product/$codigo")
+                        // 🚨 Si no existe, redirige a registrar nuevo producto
+                        navController.navigate("add_product/$codigoSeguro") {
+                            popUpTo("barcode_scanner") { inclusive = true }
+                        }
                     }
                 } else {
-                    // Error en la respuesta, redirigir a crear producto
-                    navController.navigate("add_product/$codigo")
+                    navController.navigate("add_product/$codigoSeguro") {
+                        popUpTo("barcode_scanner") { inclusive = true }
+                    }
                 }
             } catch (e: Exception) {
-                // En caso de error, redirigir a crear producto
-                navController.navigate("add_product/$codigo")
+                navController.navigate("add_product/$codigo") {
+                    popUpTo("barcode_scanner") { inclusive = true }
+                }
             }
         }
     }
-
-
-
-
 }
+

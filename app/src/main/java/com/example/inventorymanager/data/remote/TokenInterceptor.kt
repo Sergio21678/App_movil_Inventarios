@@ -23,6 +23,7 @@ class TokenInterceptor(
 
         if (response.code == 401) {
             synchronized(this) {
+                response.close() // Cerrar la respuesta antes de refrescar
                 val newToken = runBlocking { refreshToken() }
                 if (!newToken.isNullOrEmpty()) {
                     sharedPreferences.edit().putString("access_token", newToken).apply()
