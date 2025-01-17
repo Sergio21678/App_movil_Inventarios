@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    🌐 Configuración de Seguridad de Red
+    Este archivo permite el tráfico de texto sin cifrar (HTTP) hacia el dominio especificado.
+-->
+
 <network-security-config>
+    <!--
+        🔒 Configuración de dominio
+        Permite tráfico en texto claro (HTTP) hacia la IP 192.168.129.49
+        ⚠️ Solo habilitar en entornos de desarrollo. En producción se recomienda usar HTTPS.
+    -->
     <domain-config cleartextTrafficPermitted="true">
+        <!--
+            🌍 Dominio permitido para tráfico no cifrado
+            includeSubdomains="true" permite también los subdominios.
+        -->
         <domain includeSubdomains="true">192.168.129.49</domain>
     </domain-config>
 </network-security-config>

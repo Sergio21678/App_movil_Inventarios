@@ -19,43 +19,42 @@ import androidx.navigation.compose.rememberNavController
 import com.example.inventorymanager.ui.theme.InventoryManagerTheme
 import com.example.inventorymanager.ui.viewmodel.DashboardViewModel
 
+// ✅ Pantalla principal del Dashboard que muestra la lista de productos
 @Composable
 fun DashboardScreen(
-    navController: NavController,
-    viewModel: DashboardViewModel = viewModel(),
+    navController: NavController,  // 🚀 Controlador de navegación
+    viewModel: DashboardViewModel = viewModel(),  // 📊 ViewModel para manejar los datos
     modifier: Modifier = Modifier
 ) {
-    val products by viewModel.products.observeAsState(emptyList())
-    var searchQuery by remember { mutableStateOf("") }
-    var categoryFilter by remember { mutableStateOf("") }
-    var minPriceFilter by remember { mutableStateOf("") }
-    var maxPriceFilter by remember { mutableStateOf("") }
+    val products by viewModel.products.observeAsState(emptyList())  // 📦 Productos observables
+    var searchQuery by remember { mutableStateOf("") }  // 🔎 Búsqueda por nombre
+    var categoryFilter by remember { mutableStateOf("") }  // 📂 Filtro por categoría
+    var minPriceFilter by remember { mutableStateOf("") }  // 💵 Filtro por precio mínimo
+    var maxPriceFilter by remember { mutableStateOf("") }  // 💰 Filtro por precio máximo
 
-    // Filtrar productos según búsqueda y filtros
+    // 🔍 Filtrar productos según búsqueda y filtros aplicados
     val filteredProducts = products.orEmpty().filter { product ->
         (searchQuery.isEmpty() || product.nombre.contains(searchQuery, ignoreCase = true)) &&
-                (categoryFilter.isEmpty() || product.categoria_nombre?.contains(
-                    categoryFilter,
-                    ignoreCase = true
-                ) == true) &&
+                (categoryFilter.isEmpty() || product.categoria_nombre?.contains(categoryFilter, ignoreCase = true) == true) &&
                 (minPriceFilter.isBlank() || product.precio >= minPriceFilter.toDoubleOrNull() ?: Double.MIN_VALUE) &&
                 (maxPriceFilter.isBlank() || product.precio <= maxPriceFilter.toDoubleOrNull() ?: Double.MAX_VALUE)
     }
 
     LaunchedEffect(Unit) {
-        viewModel.fetchProducts()
+        viewModel.fetchProducts()  // 🔄 Cargar productos al iniciar
     }
-    Box(modifier = modifier.fillMaxSize()) {
 
-        // Fondo Decorativo
+    Box(modifier = modifier.fillMaxSize()) {
+        // 🎨 Fondo decorativo
         DashboardBackgroundShapes()
 
-        // Contenido Principal
+        // 🏗️ Contenido principal
         Column(
             modifier = modifier
                 .fillMaxSize()
                 .padding(25.dp)
         ) {
+            // 📝 Título
             Text(
                 text = "Lista de Productos",
                 style = MaterialTheme.typography.headlineSmall.copy(
@@ -65,7 +64,7 @@ fun DashboardScreen(
                 modifier = Modifier.padding(vertical = 20.dp)
             )
 
-            // Campos de búsqueda y filtros
+            // 🔎 Campos de búsqueda y filtros
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -108,6 +107,7 @@ fun DashboardScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            // 📋 Lista de productos filtrados
             LazyColumn {
                 filteredProducts.groupBy { it.categoria_nombre }
                     .forEach { (categoriaNombre, productos) ->
@@ -127,6 +127,7 @@ fun DashboardScreen(
                                     .fillMaxWidth()
                                     .padding(vertical = 10.dp)
                                     .clickable {
+                                        // 📲 Navegar a la pantalla de detalles del producto
                                         navController.navigate("product_detail/${product.codigo}")
                                     },
                                 elevation = CardDefaults.cardElevation(10.dp)
@@ -155,6 +156,7 @@ fun DashboardScreen(
     }
 }
 
+// 🎨 Elementos decorativos del fondo del Dashboard
 @Composable
 fun DashboardBackgroundShapes(modifier: Modifier = Modifier) {
     val primaryColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
@@ -179,6 +181,7 @@ fun DashboardBackgroundShapes(modifier: Modifier = Modifier) {
     }
 }
 
+// 📝 Vista previa del Dashboard
 @Preview(showBackground = true)
 @Composable
 fun DashboardScreenPreview() {
@@ -188,3 +191,10 @@ fun DashboardScreenPreview() {
         )
     }
 }
+
+
+
+
+
+
+

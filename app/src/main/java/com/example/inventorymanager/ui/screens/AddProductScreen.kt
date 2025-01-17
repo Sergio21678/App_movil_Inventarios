@@ -13,30 +13,35 @@ import com.example.inventorymanager.ui.viewmodel.DashboardViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddProductScreen(navController: NavController, viewModel: DashboardViewModel, scannedCode: String) {
+    // 📌 Variables de estado para capturar los datos del formulario
     var nombre by remember { mutableStateOf("") }
     var descripcion by remember { mutableStateOf("") }
     var stock by remember { mutableStateOf("") }
     var precio by remember { mutableStateOf("") }
-    var expanded by remember { mutableStateOf(false)}
+    var expanded by remember { mutableStateOf(false) }
 
+    // 📌 Obtener la lista de categorías desde el ViewModel
     val categorias = viewModel.categorias.collectAsState(initial = emptyList()).value
     var categoriaSeleccionada by remember { mutableStateOf<Categoria?>(null) }
 
+    // 🚀 Llama a la función para cargar las categorías cuando se crea la pantalla
     LaunchedEffect(Unit) {
         viewModel.fetchCategorias()
     }
 
+    // 🏗️ Estructura del formulario
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
         verticalArrangement = Arrangement.Center
     ) {
+        // 📝 Título de la pantalla
         Text("Registrar Nuevo Producto", style = MaterialTheme.typography.titleLarge)
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Campo: Nombre
+        // 📝 Campo: Nombre del producto
         OutlinedTextField(
             value = nombre,
             onValueChange = { nombre = it },
@@ -46,7 +51,7 @@ fun AddProductScreen(navController: NavController, viewModel: DashboardViewModel
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Campo: Descripción
+        // 📝 Campo: Descripción del producto
         OutlinedTextField(
             value = descripcion,
             onValueChange = { descripcion = it },
@@ -56,7 +61,7 @@ fun AddProductScreen(navController: NavController, viewModel: DashboardViewModel
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Campo: Código (automático)
+        // 📝 Campo: Código del producto (prellenado y deshabilitado)
         OutlinedTextField(
             value = scannedCode,
             onValueChange = {},
@@ -67,7 +72,7 @@ fun AddProductScreen(navController: NavController, viewModel: DashboardViewModel
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Campo: Stock
+        // 📝 Campo: Stock del producto (valida si es un número entero)
         OutlinedTextField(
             value = stock,
             onValueChange = { stock = it },
@@ -78,7 +83,7 @@ fun AddProductScreen(navController: NavController, viewModel: DashboardViewModel
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Campo: Precio
+        // 📝 Campo: Precio del producto (valida si es un número decimal)
         OutlinedTextField(
             value = precio,
             onValueChange = { precio = it },
@@ -89,7 +94,7 @@ fun AddProductScreen(navController: NavController, viewModel: DashboardViewModel
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Campo: Selección de Categoría (Dropdown)
+        // 📝 Campo: Selección de Categoría mediante Dropdown
         ExposedDropdownMenuBox(
             expanded = expanded,
             onExpandedChange = { expanded = !expanded }
@@ -102,12 +107,13 @@ fun AddProductScreen(navController: NavController, viewModel: DashboardViewModel
                 modifier = Modifier
                     .menuAnchor()
                     .fillMaxWidth()
-                    .clickable { expanded = true}
+                    .clickable { expanded = true }
             )
             DropdownMenu(
                 expanded = expanded,
                 onDismissRequest = { expanded = false }
             ) {
+                // 📌 Listado de categorías para seleccionar
                 categorias.forEach { categoria ->
                     DropdownMenuItem(
                         text = { Text(categoria.nombre) },
@@ -122,9 +128,10 @@ fun AddProductScreen(navController: NavController, viewModel: DashboardViewModel
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Botón para Guardar
+        // 🔘 Botón para guardar el producto
         Button(
             onClick = {
+                // ✅ Validación de campos antes de enviar los datos
                 if (nombre.isNotEmpty() && descripcion.isNotEmpty() && stock.toIntOrNull() != null && precio.toDoubleOrNull() != null) {
                     viewModel.addProduct(
                         nombre = nombre,
@@ -134,6 +141,7 @@ fun AddProductScreen(navController: NavController, viewModel: DashboardViewModel
                         precio = precio.toDouble(),
                         categoriaId = categoriaSeleccionada!!.id
                     )
+                    // 🔄 Navega de vuelta al Dashboard después de guardar
                     navController.navigate("dashboard") {
                         popUpTo("add_product/$scannedCode") { inclusive = true }
                     }
@@ -141,7 +149,7 @@ fun AddProductScreen(navController: NavController, viewModel: DashboardViewModel
             },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Guardar Producto")
+            Text("Guardar Producto")  // 📝 Texto del botón
         }
     }
 }

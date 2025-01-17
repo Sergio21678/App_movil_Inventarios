@@ -18,53 +18,62 @@ import androidx.navigation.NavController
 import com.example.inventorymanager.ui.viewmodel.DashboardViewModel
 import com.google.zxing.integration.android.IntentIntegrator
 
-// ✅ BarcodeScannerScreen.kt (Corregido)
+// ✅ Pantalla para escanear códigos de barras
 @Composable
 fun BarcodeScannerScreen(navController: NavController, viewModel: DashboardViewModel) {
-    val context = LocalContext.current
-    var scannedCode by remember { mutableStateOf("") }
-    var isScanning by remember { mutableStateOf(false) }
+    val context = LocalContext.current  // 📱 Contexto actual de la aplicación
+    var scannedCode by remember { mutableStateOf("") }  // 🔍 Almacena el código escaneado
+    var isScanning by remember { mutableStateOf(false) }  // 🔄 Controla si se está escaneando
 
+    // 📸 Lanzador para pedir permiso de cámara
     val cameraPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         if (isGranted) {
+            // ✅ Si se concede el permiso, inicia el escaneo
             IntentIntegrator(context as android.app.Activity).initiateScan()
         }
     }
 
+    // 📲 Lanzador para capturar el resultado del escaneo
     val barcodeLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             val intentResult = IntentIntegrator.parseActivityResult(result.resultCode, result.data)
             intentResult?.contents?.let { scannedCode ->
+                // 🔎 Busca el producto por el código escaneado y redirige
                 viewModel.buscarProductoYRedirigir(navController, scannedCode)
             }
         }
     }
 
-
+    // 🏗️ UI de la pantalla
     Column(
-        modifier = Modifier.fillMaxSize().padding(16.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
+        // 🔘 Botón para iniciar el escaneo
         Button(onClick = {
             if (!isScanning) {
                 isScanning = true
-                val integrator = IntentIntegrator(context as Activity)
-                integrator.setPrompt("Escanea el código de barras")
-                integrator.setBeepEnabled(true)
-                integrator.setOrientationLocked(false)
-                barcodeLauncher.launch(integrator.createScanIntent())
+                val integrator = IntentIntegrator(context as Activity).apply {
+                    setPrompt("Escanea el código de barras")  // 📝 Mensaje al usuario
+                    setBeepEnabled(true)                      // 🔔 Sonido al escanear
+                    setOrientationLocked(false)               // 🔄 Permite rotar la pantalla
+                }
+                barcodeLauncher.launch(integrator.createScanIntent())  // 🚀 Inicia el escaneo
             }
         }) {
-            Text("Escanear Código")
+            Text("Escanear Código")  // 📝 Texto del botón
         }
 
         Spacer(modifier = Modifier.height(20.dp))
 
+        // 📋 Muestra el código escaneado si existe
         if (scannedCode.isNotEmpty()) {
             Text("Código Escaneado: $scannedCode")
         }

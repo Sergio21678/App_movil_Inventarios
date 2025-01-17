@@ -33,26 +33,29 @@ import com.example.inventorymanager.ui.viewmodel.MovimientosViewModelFactory
 import java.net.URLDecoder
 import java.nio.charset.StandardCharsets
 
+// 📌 Definición de las rutas de navegación
 sealed class Screen(val route: String) {
-    object Login : Screen("login")
-    object Dashboard : Screen("dashboard")
-    object Movimientos : Screen("movimientos")
-    object BarcodeScanner : Screen("barcode_scanner")
-    object ProductDetail : Screen("product_detail/{id}")
-    object AddProduct : Screen("add_product/{codigo}")
+    object Login : Screen("login")                           // Ruta para la pantalla de login
+    object Dashboard : Screen("dashboard")                   // Ruta para la pantalla principal (dashboard)
+    object Movimientos : Screen("movimientos")               // Ruta para la pantalla de movimientos
+    object BarcodeScanner : Screen("barcode_scanner")        // Ruta para la pantalla de escaneo de código
+    object ProductDetail : Screen("product_detail/{id}")     // Ruta para detalle de producto
+    object AddProduct : Screen("add_product/{codigo}")       // Ruta para agregar un nuevo producto
 }
 
+// 🚀 Gráfico de navegación
 @Composable
 fun NavGraph(navController: NavHostController, apiService: ApiService) {
-    val productRepository = ProductRepository(apiService)
-    val dashboardViewModel = DashboardViewModel(productRepository)
+    val productRepository = ProductRepository(apiService)  // Repositorio para gestionar datos
+    val dashboardViewModel = DashboardViewModel(productRepository)  // ViewModel del dashboard
     val movimientosViewModel: MovimientosViewModel = viewModel(
         factory = MovimientosViewModelFactory(productRepository)
     )
 
+    // 🌐 Configuración de navegación
     NavHost(
         navController = navController,
-        startDestination = Screen.Login.route
+        startDestination = Screen.Login.route  // Establece la pantalla de inicio
     ) {
         // 🟢 Pantalla de Login
         composable(Screen.Login.route) {
@@ -63,10 +66,10 @@ fun NavGraph(navController: NavHostController, apiService: ApiService) {
             })
         }
 
-        // 🟢 Pantalla de Dashboard con botón para escanear código
+        // 🟢 Pantalla de Dashboard con botón flotante para escanear código
         composable(Screen.Dashboard.route) {
             Scaffold(
-                bottomBar = { BottomNavBar(navController) },
+                bottomBar = { BottomNavBar(navController) },  // Barra de navegación inferior
                 floatingActionButton = {
                     IconButton(onClick = { navController.navigate(Screen.BarcodeScanner.route) }) {
                         Icon(imageVector = Icons.Default.CameraAlt, contentDescription = "Escanear Código")
@@ -94,9 +97,10 @@ fun NavGraph(navController: NavHostController, apiService: ApiService) {
             }
         }
 
+        // 🟢 Pantalla de Detalle del Producto (por código escaneado)
         composable("product_detail/{codigo}") { backStackEntry ->
             val codigo = backStackEntry.arguments?.getString("codigo") ?: ""
-            dashboardViewModel.buscarProductoPorCodigo(codigo)
+            dashboardViewModel.buscarProductoPorCodigo(codigo)  // Buscar producto
             val product by dashboardViewModel.producto.observeAsState()
 
             if (product != null) {
@@ -106,16 +110,16 @@ fun NavGraph(navController: NavHostController, apiService: ApiService) {
             }
         }
 
-
-        // 🟢 Pantalla de Detalle del Producto (por código escaneado)
+        // 🟢 Pantalla para agregar un nuevo producto después de escanear
         composable("add_product/{codigo}") { backStackEntry ->
             val scannedCode = backStackEntry.arguments?.getString("codigo")?.let {
-                URLDecoder.decode(it, StandardCharsets.UTF_8.toString())  // ✅ Decodificar
+                URLDecoder.decode(it, StandardCharsets.UTF_8.toString())  // ✅ Decodificar el código escaneado
             } ?: ""
 
             AddProductScreen(navController = navController, viewModel = dashboardViewModel, scannedCode = scannedCode)
         }
 
+        // 🟢 Pantalla de Detalle del Producto
         composable(Screen.ProductDetail.route) { backStackEntry ->
             val id = backStackEntry.arguments?.getString("codigo")?.toIntOrNull() ?: -1
             val product = dashboardViewModel.products.value?.find { it.id == id }
@@ -131,4 +135,5 @@ fun NavGraph(navController: NavHostController, apiService: ApiService) {
         composable(Screen.BarcodeScanner.route) {
             BarcodeScannerScreen(navController, dashboardViewModel)
         }
-}}
+    }
+}

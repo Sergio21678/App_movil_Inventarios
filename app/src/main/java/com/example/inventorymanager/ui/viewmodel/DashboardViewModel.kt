@@ -19,31 +19,31 @@ import retrofit2.Response
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
+// ✅ ViewModel para manejar la lógica de negocio del Dashboard
 class DashboardViewModel(private val repository: ProductRepository? = null) : ViewModel() {
 
+    // 📦 LiveData para almacenar la lista de productos
     private val _products = MutableLiveData<List<Product>?>()
     val products: LiveData<List<Product>?> get() = _products
 
+    // 📦 LiveData para un producto específico (búsqueda por código)
     private val _producto = MutableLiveData<Product?>()
     val producto: LiveData<Product?> get() = _producto
 
+    // 📦 StateFlow para manejar categorías de productos
     private val _categorias = MutableStateFlow<List<Categoria>>(emptyList())
     val categorias: StateFlow<List<Categoria>> = _categorias
 
-
+    // 🔄 Obtener la lista de productos desde la API
     fun fetchProducts() {
         viewModelScope.launch {
             try {
-                val response = repository?.getProducts() // Esto devuelve Response<List<Product>>
+                val response = repository?.getProducts()
                 if (response?.isSuccessful == true) {
-                    val products = response.body() // Extrae el cuerpo de la respuesta
-                    if (products != null) {
-                        _products.postValue(products) // Actualiza los datos de LiveData
-                    } else {
-                        _products.postValue(emptyList()) // En caso de que el cuerpo sea nulo
-                    }
+                    val products = response.body()
+                    _products.postValue(products ?: emptyList())
                 } else {
-                    _products.postValue(emptyList()) // En caso de que la respuesta no sea exitosa
+                    _products.postValue(emptyList())
                     println("Error al obtener productos: ${response?.code()}")
                 }
             } catch (e: Exception) {
@@ -53,6 +53,7 @@ class DashboardViewModel(private val repository: ProductRepository? = null) : Vi
         }
     }
 
+    // 🔐 Iniciar sesión
     fun login(username: String, password: String, onSuccess: (String, String) -> Unit, onFailure: (Throwable) -> Unit) {
         viewModelScope.launch {
             try {
@@ -75,6 +76,7 @@ class DashboardViewModel(private val repository: ProductRepository? = null) : Vi
         }
     }
 
+    // 🔎 Búsqueda avanzada de productos
     fun searchProducts(
         nombre: String? = null,
         categoria: String? = null,
@@ -85,8 +87,7 @@ class DashboardViewModel(private val repository: ProductRepository? = null) : Vi
             try {
                 val response = repository?.searchProducts(nombre, categoria, precioMin, precioMax)
                 if (response?.isSuccessful == true) {
-                    val products = response.body()
-                    _products.postValue(products ?: emptyList())
+                    _products.postValue(response.body() ?: emptyList())
                 } else {
                     _products.postValue(emptyList())
                     println("Error en la búsqueda avanzada: ${response?.code()}")
@@ -98,15 +99,16 @@ class DashboardViewModel(private val repository: ProductRepository? = null) : Vi
         }
     }
 
+    // 🔄 Realizar movimiento (entrada/salida de stock)
     fun realizarMovimiento(productId: Int, tipo: String, cantidad: Int) {
         viewModelScope.launch {
             try {
                 val movimiento = Movimiento(
-                    id = null, // ID lo genera el backend
+                    id = null,
                     tipo = tipo,
                     cantidad = cantidad,
-                    producto = productId, // Ahora se llama 'producto'
-                    fecha = null // Backend puede asignar la fecha
+                    producto = productId,
+                    fecha = null
                 )
                 val response = repository?.createMovimiento(movimiento)
                 if (response != null && response.isSuccessful) {
@@ -120,6 +122,7 @@ class DashboardViewModel(private val repository: ProductRepository? = null) : Vi
         }
     }
 
+    // 🔎 Buscar producto por código de barras
     fun buscarProductoPorCodigo(codigo: String) {
         viewModelScope.launch {
             try {
@@ -136,7 +139,7 @@ class DashboardViewModel(private val repository: ProductRepository? = null) : Vi
         }
     }
 
-
+    // ➕ Agregar un nuevo producto
     fun addProduct(nombre: String, descripcion: String, codigo: String, stock: Int, precio: Double, categoriaId: Int) {
         viewModelScope.launch {
             val nuevoProducto = Product(
@@ -150,10 +153,7 @@ class DashboardViewModel(private val repository: ProductRepository? = null) : Vi
                 categoria_nombre = null,
                 fecha_creacion = ""
             )
-
-            Log.d("Producto", "Enviando producto: $nuevoProducto")  // ✅ Verificar datos
-
-            repository?.addProduct(nuevoProducto)
+            Log.d("Producto", "Enviando producto: $nuevoProducto")
             try {
                 val response = repository?.addProduct(nuevoProducto)
                 if (response != null && response.isSuccessful) {
@@ -167,11 +167,12 @@ class DashboardViewModel(private val repository: ProductRepository? = null) : Vi
         }
     }
 
+    // 📂 Obtener categorías desde la API
     fun fetchCategorias() {
         viewModelScope.launch {
             try {
                 val response = repository?.getCategorias()
-                if (response != null &&response.isSuccessful) {
+                if (response != null && response.isSuccessful) {
                     _categorias.value = response.body() ?: emptyList()
                 } else {
                     Log.e("Categoría", "Error en la respuesta: ${response?.errorBody()?.string()}")
@@ -182,6 +183,7 @@ class DashboardViewModel(private val repository: ProductRepository? = null) : Vi
         }
     }
 
+    // 🔀 Buscar producto por código y redirigir según resultado
     fun buscarProductoYRedirigir(navController: NavController, codigo: String) {
         viewModelScope.launch {
             try {
@@ -190,14 +192,13 @@ class DashboardViewModel(private val repository: ProductRepository? = null) : Vi
 
                 if (response != null && response.isSuccessful) {
                     val productoExistente = response.body()
-
                     if (productoExistente != null) {
-                        // ✅ Navegar al detalle si el producto existe
+                        // ✅ Redirige al detalle si el producto existe
                         navController.navigate("product_detail/$codigoSeguro") {
                             popUpTo("barcode_scanner") { inclusive = true }
                         }
                     } else {
-                        // 🚨 Si no existe, redirige a registrar nuevo producto
+                        // ➕ Redirige a registrar si no existe
                         navController.navigate("add_product/$codigoSeguro") {
                             popUpTo("barcode_scanner") { inclusive = true }
                         }
